@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { format_percentage } from '$lib/caniuse';
-	import { get_search_results, search } from './search.remote';
+	import { get_search_results } from './search.remote';
 	import { resolve } from '$app/paths';
-	import { search_features } from '$lib/search';
+	import { page } from '$app/state';
 
-	let search_result = $derived(search.result ?? (await get_search_results({ query: '' })));
+	let query = $derived(page.url.searchParams.get('q') ?? '');
+	let feature_id = $derived(page.url.searchParams.get('feature') ?? undefined);
+	let search_result = $derived(await get_search_results({ query, feature_id }));
 
 	let highlight = $state(0);
 
@@ -36,8 +38,6 @@
 			highlight = 0;
 		}
 	}
-
-	let form_data: FormData;
 </script>
 
 <svelte:head>
@@ -69,23 +69,14 @@
 		</section>
 
 		<section class="search" aria-label="Search web platform features">
-			<form
-				onformdata={(e) => {
-					form_data = e.formData;
-				}}
-				{...search.enhance(async () => {
-					search_result = await search_features({
-						query: search.fields.query.value() ?? '',
-						feature_id: form_data.get('feature_id')?.toString() ?? undefined
-					});
-					highlight = 0;
-				})}
-			>
+			<form data-sveltekit-keepfocus method="GET" action={resolve('/')}>
 				<div class="search-controls">
 					<label class="field">
 						<span class="field-label">Web platform feature</span>
 						<input
-							{...search.fields.query.as('search', search_result.query)}
+							type="search"
+							name="q"
+							defaultValue={search_result.query}
 							role="combobox"
 							aria-expanded={matches.length > 0}
 							aria-controls="match-list"
@@ -108,7 +99,9 @@
 							{@const b = band(match.support.total)}
 							<li role="presentation">
 								<button
-									{...search.fields.feature_id.as('submit', match.id)}
+									type="submit"
+									name="feature"
+									value={match.id}
 									role="option"
 									aria-selected={match.id === active_id}
 									class={{ match: true, active: match.id === active_id, cued: i === highlight }}
