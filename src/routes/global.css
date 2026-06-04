@@ -1,0 +1,130 @@
+:root {
+	color-scheme: light;
+
+	/* Warm paper neutrals, tinted toward the brand hue (~85). Never pure #fff/#000. */
+	--paper: oklch(0.985 0.006 85);
+	--paper-sunk: oklch(0.965 0.008 85);
+	--surface: oklch(0.995 0.004 85);
+	--hairline: oklch(0.9 0.01 80);
+	--hairline-strong: oklch(0.82 0.014 78);
+
+	--ink: oklch(0.27 0.018 65);
+	--ink-soft: oklch(0.46 0.02 70);
+	--ink-faint: oklch(0.6 0.018 72);
+
+	/* One identity accent: marigold. Chrome only (focus, active marker, wordmark), never data. */
+	--accent: oklch(0.78 0.14 78);
+	--accent-deep: oklch(0.62 0.13 70);
+	--accent-wash: oklch(0.93 0.06 84);
+	--focus-ring: oklch(0.78 0.14 78 / 0.45);
+
+	/* Functional support scale. Always paired with a number and a word, never color alone. */
+	--band-strong: oklch(0.56 0.09 155);
+	--band-good: oklch(0.52 0.08 235);
+	--band-limited: oklch(0.57 0.13 40);
+
+	--measure: 68ch;
+
+	--font-display: 'Fraunces Variable', Charter, 'Times New Roman', serif;
+	--font-sans: 'Geist Variable', system-ui, sans-serif;
+	--font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+/* Dark mode: a warm, low-chroma "dim paper" inversion. Not neon-on-black; the
+	   same editorial calm, lit from the other side. Applied on system preference
+	   unless the reader forced light, and always when the reader forced dark. */
+:root[data-theme='dark'] {
+	color-scheme: dark;
+
+	--paper: oklch(0.205 0.012 75);
+	--paper-sunk: oklch(0.285 0.012 75);
+	--surface: oklch(0.245 0.012 75);
+	--hairline: oklch(0.32 0.012 75);
+	--hairline-strong: oklch(0.43 0.014 75);
+
+	--ink: oklch(0.93 0.01 85);
+	--ink-soft: oklch(0.74 0.014 80);
+	--ink-faint: oklch(0.6 0.014 78);
+
+	--accent: oklch(0.8 0.14 80);
+	--accent-deep: oklch(0.82 0.13 82);
+	--accent-wash: oklch(0.33 0.05 78);
+	--focus-ring: oklch(0.8 0.14 80 / 0.5);
+
+	--band-strong: oklch(0.72 0.12 155);
+	--band-good: oklch(0.7 0.11 235);
+	--band-limited: oklch(0.7 0.15 42);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		color-scheme: dark;
+
+		--paper: oklch(0.205 0.012 75);
+		--paper-sunk: oklch(0.285 0.012 75);
+		--surface: oklch(0.245 0.012 75);
+		--hairline: oklch(0.32 0.012 75);
+		--hairline-strong: oklch(0.43 0.014 75);
+
+		--ink: oklch(0.93 0.01 85);
+		--ink-soft: oklch(0.74 0.014 80);
+		--ink-faint: oklch(0.6 0.014 78);
+
+		--accent: oklch(0.8 0.14 80);
+		--accent-deep: oklch(0.82 0.13 82);
+		--accent-wash: oklch(0.33 0.05 78);
+		--focus-ring: oklch(0.8 0.14 80 / 0.5);
+
+		--band-strong: oklch(0.72 0.12 155);
+		--band-good: oklch(0.7 0.11 235);
+		--band-limited: oklch(0.7 0.15 42);
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	min-width: 320px;
+	background: var(--paper);
+	color: var(--ink);
+	font-family: var(--font-sans);
+	font-size: 16px;
+	line-height: 1.5;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transition:
+		background-color 320ms ease,
+		color 320ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body {
+		transition: none;
+	}
+}
+
+button,
+input {
+	font: inherit;
+	color: inherit;
+}
+
+::selection {
+	background: var(--accent-wash);
+	color: var(--ink);
+}
+
+:focus-visible {
+	outline: 2px solid var(--accent-deep);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
