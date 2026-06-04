@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { format_percentage } from '$lib/caniuse';
-	import { get_theme, set_theme } from './theme.remote';
 	import { get_search_results, search } from './search.remote';
-	import { opposite_theme, theme_cookie } from '$lib/theme';
 	import { resolve } from '$app/paths';
 	import { search_features } from '$lib/search';
 
@@ -10,7 +8,6 @@
 
 	let highlight = $state(0);
 
-	let theme = $derived(await get_theme());
 	let matches = $derived(search_result.matches);
 	let report = $derived(search_result.report);
 	let active_id = $derived(report?.id ?? '');
@@ -59,42 +56,6 @@
 		</a>
 		<div class="masthead-end">
 			<p class="source">caniuse data · global usage share</p>
-			<form
-				{...set_theme.enhance(() => {
-					const opposite = opposite_theme(theme);
-					document.cookie = `${theme_cookie}=${opposite}; path=/;`;
-					document.documentElement.dataset.theme = opposite;
-					theme = opposite;
-				})}
-			>
-				<input {...set_theme.fields.theme.as('hidden', opposite_theme(theme))} />
-				<button
-					type="submit"
-					class="theme-toggle"
-					aria-pressed={theme === 'dark'}
-					aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-					title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-					disabled={set_theme.pending > 0}
-				>
-					<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-						{#if theme === 'dark'}
-							<circle cx="12" cy="12" r="4.2" fill="currentColor" />
-							<g stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-								<line x1="12" y1="2.5" x2="12" y2="5" />
-								<line x1="12" y1="19" x2="12" y2="21.5" />
-								<line x1="2.5" y1="12" x2="5" y2="12" />
-								<line x1="19" y1="12" x2="21.5" y2="12" />
-								<line x1="5.2" y1="5.2" x2="7" y2="7" />
-								<line x1="17" y1="17" x2="18.8" y2="18.8" />
-								<line x1="5.2" y1="18.8" x2="7" y2="17" />
-								<line x1="17" y1="7" x2="18.8" y2="5.2" />
-							</g>
-						{:else}
-							<path d="M20 14.2A8 8 0 1 1 9.8 4 6.3 6.3 0 0 0 20 14.2Z" fill="currentColor" />
-						{/if}
-					</svg>
-				</button>
-			</form>
 		</div>
 	</header>
 
@@ -181,7 +142,7 @@
 							class="external-link"
 							href={report.caniuse_url}
 							target="_blank"
-							rel="noreferrer"
+							rel="external noreferrer"
 							aria-label={`View ${report.title} on Can I Use`}
 						>
 							View on Can I Use
@@ -243,7 +204,7 @@
 											class="external-link rec-link"
 											href={rec.caniuse_url}
 											target="_blank"
-											rel="noreferrer"
+											rel="external noreferrer"
 											aria-label={`View ${rec.title} on Can I Use`}
 										>
 											Can I Use
@@ -335,38 +296,6 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 1rem;
-	}
-
-	.masthead-end form {
-		display: inline-grid;
-		margin: 0;
-	}
-
-	.theme-toggle {
-		display: inline-grid;
-		place-items: center;
-		width: 2.25rem;
-		height: 2.25rem;
-		padding: 0;
-		border: 1px solid var(--hairline-strong);
-		border-radius: 50%;
-		background: var(--surface);
-		color: var(--ink-soft);
-		cursor: pointer;
-		transition:
-			color 140ms ease,
-			border-color 140ms ease,
-			background-color 140ms ease;
-	}
-
-	.theme-toggle:hover {
-		color: var(--accent-deep);
-		border-color: var(--accent-deep);
-		background: var(--paper-sunk);
-	}
-
-	.theme-toggle svg {
-		display: block;
 	}
 
 	/* Lead */
